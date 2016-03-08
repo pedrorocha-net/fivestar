@@ -7,7 +7,7 @@
 
 namespace Drupal\fivestar\Plugin\Field\FieldType;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldItemBase;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Language\Language;
@@ -94,7 +94,7 @@ class FivestarItem extends FieldItemBase {
     $widget_title = $this->t('Number of stars');
     $element['stars'] = array(
       '#type' => 'select',
-      '#title' => String::checkPlain($widget_title),
+      '#title' => Html::escape($widget_title),
       '#options' =>  array_combine(range(1, 10), range(1, 10)),
       '#default_value' => isset($settings['stars']) ? $settings['stars'] : 5,
     );

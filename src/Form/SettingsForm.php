@@ -25,23 +25,32 @@ class SettingsForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+  public function getEditableConfigNames() {
+    return [
+      'fivestar.settings',
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('fivestar.settings');
-    $form['tags'] = array(
+    $form['tags'] = [
       '#tree' => FALSE,
       '#type' => 'fieldset',
       '#title' => t('Voting tags'),
       '#description' => t('Choose the voting tags that will be available for node rating. A tag is simply a category of vote. If you only need to rate one thing per node, leave this as the default "vote".'),
       '#weight' => 3,
-    );
+    ];
 
-    $form['tags']['tags'] = array(
+    $form['tags']['tags'] = [
       '#type' => 'textfield',
       '#title' => t('Tags'),
       '#default_value' => $config->get('tags', 'vote'),
       '#required' => TRUE,
       '#description' => t('Separate multiple tags with commas.'),
-    );
+    ];
     return parent::buildForm($form, $form_state);
   }
 
@@ -56,8 +65,8 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-    $config = $this->config('fivestar.settings');
-    $config->set('tags', $form_state->getValue(array('tags', 'tags')));
+    $config = $this->configFactory->getEditable('fivestar.settings');
+    $config->set('tags', $form_state->getValue('tags'));
     $config->save();
   }
 

@@ -1,0 +1,26 @@
+fivestar.base:
+  version: VERSION
+  css:
+    component:
+      css/fivestar.css: {}
+  js:
+    js/fivestar.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once
+
+fivestar.admin:
+  version: VERSION
+  css:
+    component:
+      css/fivestar-admin.css: {}
+
+fivestar.ajax:
+  version: VERSION
+  js:
+    js/fivestar.ajax.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/jquery.once

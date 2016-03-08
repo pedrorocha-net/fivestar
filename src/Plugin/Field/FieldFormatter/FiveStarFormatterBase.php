@@ -17,7 +17,11 @@ use Drupal\Core\Url;
  */
 class FivestarFormatterBase extends FormatterBase {
 
-  public function viewElements(FieldItemListInterface $items) {
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+    $elements = array();
+    $settings = $this->getFieldSettings();
+
+
     return array(
       '#markup' => 'ddd'
     );

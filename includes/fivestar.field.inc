@@ -162,15 +162,14 @@ function fivestar_field_widget_settings_form($field, $instance) {
 }
 
 function fivestar_previews_expand($element) {
-
-  foreach (element_children($element) as $css) {
+  foreach (\Drupal\Core\Render\Element::children($element) as $css) {
     $vars = array(
-      'css' => $css,
-      'name' => strtolower($element[$css]['#title']),
+      '#type' => 'fivestar_preview_widget',
+      '#css' => $css,
+      '#name' => strtolower($element[$css]['#title']),
     );
-    $element[$css]['#description'] = theme('fivestar_preview_widget', $vars);
+    $element[$css]['#description'] = \Drupal::service('renderer')->render($vars);
   }
-
   return $element;
 }
 

@@ -9,7 +9,6 @@
  * Show a preview of a widget using a custom CSS file.
  */
 function theme_fivestar_preview_widget($variables) {
-  $path = drupal_get_path('module', 'fivestar');
   $form = array(
     '#post' => array(),
     '#programmed' => FALSE,
@@ -20,11 +19,12 @@ function theme_fivestar_preview_widget($variables) {
     '#attributes' => array(),
     '#title_display' => 'before',
   );
-  $form_state = \Drupal::formBuilder()->getFormStateDefaults();
-  $form_state['values'] = array();
-  $form_state['process_input'] = array();
-  $form_state['complete form'] = array();
-
+  $complete_form = [];
+  $form_state = new \Drupal\Core\Form\FormState();
+  $buidler = \Drupal::formBuilder();
+  $form_state->setValues([]);
+  $form_state->setProcessInput(FALSE);
+  $form_state->setCompleteForm($complete_form);
   $form['vote'] = array(
     '#type' => 'fivestar',
     '#stars' => 5,
@@ -56,13 +56,12 @@ function theme_fivestar_preview_widget($variables) {
     )
   );
 
-  $form = form_builder('fivestar_preview', $form, $form_state);
+  $buidler->doBuildForm('fivestar_preview', $form, $form_state);
+  $output = $form;
+  $output['#prefix'] = '<div class="fivestar-star-preview fivestar-' . $form['vote']['#widget']['name'] . '">';
+  $output['#suffix'] = '</div>';
 
-  $output = '<div class="fivestar-star-preview fivestar-' . $form['vote']['#widget']['name'] . '">';
-  $output .= drupal_render_children($form);
-  $output .= '</div>';
-
-  return $output;
+  return \Drupal::service('renderer')->render($output);
 }
 
 function theme_fivestar_preview($variables) {
@@ -173,10 +172,15 @@ function theme_fivestar($variables) {
  */
 function theme_fivestar_select($variables) {
   $element = $variables['element'];
-  element_set_attributes($element, array('id', 'name', 'size'));
-  _form_set_class($element, array('form-select'));
-  return '<select' . drupal_attributes($element['#attributes']) . '>' . form_select_options($element) . '</select>';
+  unset($element['#theme']);
+  return \Drupal::service('renderer')->render($element);
+  \Drupal\Core\Render\Element::setAttributes($element, ['id', 'name', 'size']);
+  \Drupal\Core\Render\Element\RenderElement::setAttributes($element, array('form-select'));
+  $variables['#attributes'] = $element['#attributes'];
+  $variables['#options'] = form_select_options($element);
+  $variables['#theme'] = 'select';
 }
+
 /**
  * Display a plain HTML view-only version of the widget with a specified rating.
  *

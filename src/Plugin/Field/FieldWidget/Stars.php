@@ -7,9 +7,11 @@
 
 namespace Drupal\fivestar\Plugin\Field\FieldWidget;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Plugin implementation of the 'fivestar_stars' widget.
@@ -27,9 +29,9 @@ class Stars extends FiveStartWidgetBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
-      'fivestar_widget' => '',
-    ) + parent::defaultSettings();
+    return [
+      'widget' => ['fivestar_widget' => 'default'],
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -47,25 +49,36 @@ class Stars extends FiveStartWidgetBase {
       '#collapsed' => TRUE,
     );
 
-    $default = $this->getSetting('fivestar_widget') ?: 'default';
+    $default = $this->getSetting('widget');
 
-    $elements['widget']['fivestar_widget'] = array(
+    $elements['widget']['fivestar_widget'] = [
       '#type' => 'radios',
-      '#options' => array('default' => t('Default')) + $this->getAllWidget(),
-      '#default_value' => $default,
-      '#attributes' => array('class' => array('fivestar-widgets', 'clearfix')),
-      '#pre_render' => array('fivestar_previews_expand'),
-      '#attached' => array('css' => array(drupal_get_path('module', 'fivestar') . '/css/fivestar-admin.css')),
-    );
+      '#options' => ['default' => t('Default')] + $this->getAllWidget(),
+      '#default_value' => $default['fivestar_widget'],
+      '#attributes' => ['class' => ['fivestar-widgets', 'clearfix']],
+      '#pre_render' => [[$this, 'previewsExpand']],
+      '#attached' => ['library' => ['fivestar/fivestar.admin']],
+    ];
 
     return $elements;
+  }
+
+  public function previewsExpand(array $element) {
+    foreach (Element::children($element) as $css) {
+      $vars = [
+        '#theme' => 'fivestar_preview_widget',
+        '#css' => $css,
+        '#name' => strtolower($element[$css]['#title']),
+      ];
+      $element[$css]['#description'] = \Drupal::service('renderer')->render($vars);
+    }
+    return $element;
   }
 
   /**
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    $i18n = function_exists('i18n_field_translate_property');
     if (isset($form['#title']) && $form['#title'] == 'Default value') {
       $options = array(0 => t('No stars'));
       $star_settings = $this->getSetting('stars');
@@ -78,19 +91,19 @@ class Stars extends FiveStartWidgetBase {
       }
       $elements['rating'] = array(
         '#type' => 'select',
-        '#title' => $this->t(String::checkPlain($this->fieldDefinition->getLabel())),
+        '#title' => $this->t(Html::escape($this->fieldDefinition->getLabel())),
         '#options' => $options,
         '#default_value' => isset($items[$delta]['rating']) ? $items[$delta]['rating'] : NULL,
-        '#description' => $this->t(String::checkPlain($this->fieldDefinition->getDescription())),
+        '#description' => $this->t(Html::escape($this->fieldDefinition->getDescription())),
         '#required' => isset($instance['required']) ? $instance['required'] : FALSE,
       );
 
     }
     else {
       $widgets = $this->getAllWidget();
-      $active = $this->getSetting('fivestar_widget') ?: 'default';
+      $active = $this->getSetting('widget')['fivestar_widget'];
       $widget = array(
-        'name' => isset($widgets[$active]) ? strtolower($widgets[$active]) : 'default',
+        'name' => isset($widgets[$active]) ? Unicode::strtolower($widgets[$active]) : 'default',
         'css' => $active,
       );
 
@@ -112,20 +125,20 @@ class Stars extends FiveStartWidgetBase {
 
       $element['rating'] = array(
         '#type' => 'fivestar',
-        '#title' => isset($instance['label']) ? (($i18n) ? i18n_field_translate_property($instance, 'label') : t($instance['label'])) : FALSE,
+        '#title' => isset($instance['label']) ? t($instance['label']) : FALSE,
         '#stars' => $this->getSetting('stars') ?: 5,
         '#allow_clear' => $this->getSetting('allow_clear') ?: FALSE,
         '#allow_revote' => $this->getSetting('allow_revote') ?: FALSE,
         '#allow_ownvote' => $this->getSetting('allow_ownvote') ?: FALSE,
-        '#default_value' => isset($items[$delta]['rating']) ? $items[$delta]['rating'] : (isset($instance['default_value'][$delta]['rating']) ? $instance['default_value'][$delta]['rating'] : 0),
+        '#default_value' => isset($items[$delta]->rating) ? $items[$delta]->rating : (isset($instance['default_value'][$delta]['rating']) ? $instance['default_value'][$delta]['rating'] : 0),
         '#widget' => $widget,
         '#settings' => $settings,
         '#values' => $values,
-        '#description' => isset($instance['description']) ? (($i18n) ? i18n_field_translate_property($instance, 'description') : t($instance['description'])) : FALSE,
+        '#description' => isset($instance['description']) ? t($instance['description']) : FALSE,
         '#required' => isset($instance['required']) ? $instance['required'] : FALSE,
       );
     }
-    return $elements;
+    return $element;
   }
 
   /**

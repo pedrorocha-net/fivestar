@@ -10,11 +10,12 @@
  * Originally based on the Star Rating jQuery plugin by Wil Stuckey:
  * http://sandbox.wilstuckey.com/jquery-ratings/
  */
-(function($){ // Create local scope.
+(function($){
 
 Drupal.behaviors.fivestar = {
   attach: function (context) {
-    $(context).find('div.fivestar-form-item').once('fivestar', function() {
+    // debugger;
+    $(context).find('div.fivestar-form-item').once('fivestar').each(function() {
       var $this = $(this);
       var $container = $('<div class="fivestar-widget clearfix"></div>');
       var $select = $('select', $this);
@@ -56,7 +57,7 @@ Drupal.behaviors.fivestar = {
       $select.after($container).css('display', 'none');
 
       // Allow other modules to modify the widget.
-      Drupal.attachBehaviors($this);
+      // Drupal.attachBehaviors($this);
     });
   },
   rate: function(event) {

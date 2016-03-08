@@ -50,55 +50,68 @@ function fivestar_theme() {
   return array(
     // Fivestar theme functions.
     'fivestar' => array(
+      'function' => 'theme_fivestar',
       'render element' => 'element',
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_select' => array(
+      'function' => 'theme_fivestar_select',
       'render element' => 'element',
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_static' => array(
+      'function' => 'theme_fivestar_static',
       'variables' => array('rating' => NULL, 'stars' => 5, 'tag' => 'vote', 'widget' => array('name' => 'default', 'css' => '')),
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_static_element' => array(
+      'function' => 'theme_fivestar_static_element',
       'variables' => array('star_display' => NULL, 'title' => NULL, 'description' => NULL),
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_summary' => array(
+      'function' => 'theme_fivestar_summary',
       'variables' => array('user_rating' => NULL, 'average_rating' => NULL, 'votes' => 0, 'stars' => 5, 'microdata' => array()),
       'file' => 'includes/fivestar.theme.inc',
     ),
     // fivestar.admin.inc.
     'fivestar_preview' => array(
+      'function' => 'theme_fivestar_preview',
       'variables' => array('style' => NULL, 'text' => NULL, 'stars' => NULL, 'unvote' => NULL, 'title' => NULL),
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_preview_widget' => array(
+      'function' => 'theme_fivestar_preview_widget',
       'variables' => array('css' => NULL, 'name' => NULL),
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_preview_wrapper' => array(
+      'function' => 'theme_fivestar_preview_wrapper',
       'variables' => array('content' => NULL, 'type' => 'direct'),
       'file' => 'includes/fivestar.theme.inc',
     ),
-    'fivestar_settings_form' => array(
-      'render element' => 'form',
-      'file' => 'includes/fivestar.theme.inc',
-    ),
-    'fivestar_color_form' => array(
-      'render element' => 'form',
-      'file' => 'includes/fivestar.theme.inc',
-    ),
+//    'fivestar_settings_form' => array(
+//      'function' => 'theme_fivestar_settings_form',
+//      'render element' => 'form',
+//      'file' => 'includes/fivestar.theme.inc',
+//    ),
+//    'fivestar_color_form' => array(
+//      'function' => 'theme_fivestar_color_form',
+//      'render element' => 'form',
+//      'file' => 'includes/fivestar.theme.inc',
+//    ),
     'fivestar_formatter_default' => array(
+      'function' => 'theme_fivestar_formatter_default',
       'render element' => 'element',
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_formatter_rating' => array(
+      'function' => 'theme_fivestar_formatter_rating',
       'render element' => 'element',
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_formatter_percentage' => array(
+      'function' => 'theme_fivestar_formatter_percentage',
       'render element' => 'element',
       'file' => 'includes/fivestar.theme.inc',
     ),
@@ -675,4 +688,25 @@ function _fivestar_target_comment_parent_node($entity, $field, $instance, $langc
     'entity_id' => $entity->nid,
     'entity_type' => 'node',
   );
+}
+
+/**
+ * Implements hook_library_info_build().
+ */
+function fivestar_library_info_build() {
+  $libraries = [];
+  $module_path = drupal_get_path('module', 'fivestar');
+  foreach (\Drupal::moduleHandler()->invokeAll('fivestar_widgets') as $path => $widget) {
+    // @todo ok, that's wierd.
+    $path = str_replace($module_path . '/', '', $path);
+    $name = Unicode::strtolower($widget);
+    $libraries["fivestar.{$name}"] = [
+      'css' => [
+        'component' => [
+          $path => [],
+        ],
+      ],
+    ];
+  }
+  return $libraries;
 }

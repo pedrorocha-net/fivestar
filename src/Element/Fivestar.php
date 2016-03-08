@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\fivestar\Render\Element\PathElement.
+ * Contains \Drupal\fivestar\Element\Fivestar.
  */
 
-namespace Drupal\fivestar\Render\Element;
+namespace Drupal\fivestar\Element;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\FormElement;
@@ -61,9 +61,7 @@ class Fivestar extends FormElement {
     }
 
     // Add CSS and JS
-    $path = drupal_get_path('module', 'fivestar');
-    $element['#attached']['js'][] = $path . '/js/fivestar.js';
-    $element['#attached']['css'][] = $path . '/css/fivestar.css';
+    $element['#attached']['library'][] = 'fivestar/fivestar.base';
     $settings = $element['#settings'];
     $values = $element['#values'];
     $class[] = 'clearfix';
@@ -92,7 +90,7 @@ class Fivestar extends FormElement {
       '#options' => $options,
       '#required' => $element['#required'],
       '#attributes' => $element['#attributes'],
-      '#theme' => self::isVoteAllowed($element) ? 'fivestar_select' : 'fivestar_static',
+      '#theme' => self::isVoteAllowed($element) ? 'select' /*'fivestar_select'*/ : 'fivestar_static',
       '#default_value' => self::getElementDefaultValue($element),
       '#weight' => -2,
     );
@@ -197,7 +195,7 @@ class Fivestar extends FormElement {
     $class[] = 'fivestar-form-item';
     $class[] = 'fivestar-' . $element['#widget']['name'];
     if ($element['#widget']['name'] != 'default') {
-      $element['#attached']['css'][] = $element['#widget']['css'];
+      $element['#attached']['library'][] = "fivestar/fivestar.{$element['#widget']['name']}";
     }
     $element['#prefix'] = '<div ' . new Attribute(array('class' => $class)) . '>';
     $element['#suffix'] = '</div>';
@@ -207,7 +205,7 @@ class Fivestar extends FormElement {
       $element['vote']['#ajax'] = array(
         'callback' => 'fivestar_ajax_submit',
       );
-      $element['vote']['#attached']['js'][] = $path . '/js/fivestar.ajax.js';
+      $element['vote']['#attached']['library'][] = "fivestar/fivestar.ajax";
     }
 
     if (empty($element['#input'])) {
@@ -246,7 +244,7 @@ class Fivestar extends FormElement {
    * @return bool
    */
   public static function isVoteAllowed($element) {
-    global $user;
+    $user = \Drupal::currentUser();
 
     // Check allowed to re-vote.
     $can_revote = FALSE;
@@ -254,13 +252,14 @@ class Fivestar extends FormElement {
       $can_revote = TRUE;
     }
     else {
-      $criteria = array(
-        'entity_id' => isset($element['#settings']['content_id']) ? $element['#settings']['content_id'] : NULL,
-        'entity_type' => isset($element['#settings']['content_type']) ? $element['#settings']['content_type'] : NULL,
-        'uid' => $user->uid,
-      );
+      $vote_ids = \Drupal::entityQuery('vote')
+        ->condition('entity_type', isset($element['#settings']['content_type']) ? $element['#settings']['content_type'] : NULL)
+        ->condition('entity_id', isset($element['#settings']['content_id']) ? $element['#settings']['content_id'] : NULL)
+        ->condition('user_id', isset($element['#settings']['content_id']) ? $element['#settings']['content_id'] : NULL)
+        ->execute();
+      // $votes = Drupal::entityManager()->getStorage('vote')->loadMultiple($vote_ids);
 
-      $can_revote = !votingapi_select_votes($criteria);
+      $can_revote = !$vote_ids;
     }
     if (!$can_revote) {
       return FALSE;
@@ -325,6 +324,13 @@ class Fivestar extends FormElement {
     }
 
     return $default_value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function valueCallback(&$element, $input, FormStateInterface $form_state) {
+    return $input;
   }
 
 }
