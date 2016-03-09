@@ -140,6 +140,7 @@ class FivestarItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function isEmpty() {
+    return parent::isEmpty();
     $item = $this->getFieldDefinition()->getItemDefinition()->getSetting('rating');
     return empty($item) || $item == '-';
   }
@@ -147,14 +148,7 @@ class FivestarItem extends FieldItemBase {
   /**
    * {@inheritdoc}
    */
-  public function insert() {
-    $this->fieldOperations();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function update() {
+  public function postSave($update) {
     $this->fieldOperations();
   }
 
@@ -170,7 +164,7 @@ class FivestarItem extends FieldItemBase {
     $entity_type = $entity->getEntityType();
     $langcode = $this->getLangcode();
     // FIXME: Vijay
-    return;
+    // return;
 
     foreach ($items as $delta => $item) {
       if ((isset($entity->status) && !$entity->status) || $op == 'delete') {
