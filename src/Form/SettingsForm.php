@@ -58,6 +58,9 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    if (empty($form_state->getValue('tags'))) {
+      $form_state->setError($form['tags']['tags'], 'Fill the tags field.');
+    }
   }
 
   /**
