@@ -7,9 +7,6 @@
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FormatterBase;
-
 /**
  * Plugin implementation of the 'fivestar_percentage' formatter.
  *
@@ -22,10 +19,7 @@ use Drupal\Core\Field\FormatterBase;
  *   weight = 2
  * )
  */
-class PercentageFormatter extends FormatterBase {
+class PercentageFormatter extends FiveStarsFormatterBase {
 
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    // TODO: Implement viewElements() method.
-  }
 
 }

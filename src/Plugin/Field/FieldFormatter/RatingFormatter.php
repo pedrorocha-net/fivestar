@@ -7,9 +7,6 @@
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FieldItemListInterface;
-use Drupal\Core\Field\FormatterBase;
-
 /**
  * Plugin implementation of the 'fivestar_rating' formatter.
  *
@@ -22,9 +19,6 @@ use Drupal\Core\Field\FormatterBase;
  *   weight = 3
  * )
  */
-class RatingFormatter extends FormatterBase {
+class RatingFormatter extends FiveStarsFormatterBase {
 
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    // TODO: Implement viewElements() method.
-  }
 }
