@@ -22,7 +22,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   label = @Translation("Fivestar Rating"),
  *   description = @Translation("Store a rating for this piece of content."),
  *   default_widget = "fivestar_exposed",
- *   default_formatter = "fivestar_default"
+ *   default_formatter = "fivestar_stars"
  * )
  */
 class FivestarItem extends FieldItemBase {
@@ -130,7 +130,7 @@ class FivestarItem extends FieldItemBase {
       '#return_value' => 1,
     );
 
-    
+
     // FIXME: Vijay
     // $options = $this->fivestar_get_targets($field, $instance);
     $options = array();
