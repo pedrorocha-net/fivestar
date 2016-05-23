@@ -1,7 +1,0 @@
-fivestar.admin_overview:
-  path: '/admin/config/content/fivestar'
-  defaults:
-    _form: '\Drupal\fivestar\Form\SettingsForm'
-    _title: 'Fivestar'
-  requirements:
-    _permission: 'administer site configuration'

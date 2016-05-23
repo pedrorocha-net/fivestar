@@ -1,5 +1,0 @@
-fivestar.admin_overview:
-  title: 'Fivestar'
-  parent: system.admin_config_content
-  description: 'Configure site-wide widgets used for Fivestar rating.'
-  route_name: fivestar.admin_overview

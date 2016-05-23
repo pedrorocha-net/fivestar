@@ -1,4 +1,0 @@
-fivestar.admin_overview:
-  title: List
-  route_name: fivestar.admin_overview
-  base_route: fivestar.admin_overview
