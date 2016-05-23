@@ -32,6 +32,7 @@ class FivestarItem extends FieldItemBase {
    * @var array
    */
   static $propertyDefinitions;
+
   /**
    * {@inheritdoc}
    */
@@ -64,6 +65,19 @@ class FivestarItem extends FieldItemBase {
   }
 
   /**
+   * @return array
+   */
+  public static function defaultFieldSettings() {
+    return array(
+      'stars' => 5,
+      'allow_clear' => FALSE,
+      'allow_revote' => TRUE,
+      'allow_ownvote' => TRUE,
+      'target' => '',
+    ) + parent::defaultFieldSettings();
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
@@ -82,53 +96,41 @@ class FivestarItem extends FieldItemBase {
     return $element;
   }
 
-  public static function defaultFieldSettings(){
-    return array(
-      'stars' => 5,
-      'allow_clear' => FALSE,
-      'allow_revote' => TRUE,
-      'allow_ownvote' => TRUE,
-      'target' => '',
-    ) + parent::defaultFieldSettings();
-  }
-
   /**
    * {@inheritdoc}
    */
   public function fieldSettingsForm(array $form, FormStateInterface $form_state) {
     $element = array();
 
-    $settings = $this->getSettings();
-
-    // $widget_title = ($instance['widget']['type'] == 'select') ? $this->t('Number of options') : $this->t('Number of stars');
-    $widget_title = $this->t('Number of stars');
     $element['stars'] = array(
       '#type' => 'select',
-      '#title' => Html::escape($widget_title),
-      '#options' =>  array_combine(range(1, 10), range(1, 10)),
-      '#default_value' => $settings['stars'],
+      '#title' => $this->t('Number of stars'),
+      '#options' => array_combine(range(1, 10), range(1, 10)),
+      '#default_value' => $this->getSetting('stars'),
     );
 
     $element['allow_clear'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Allow users to cancel their ratings.'),
-      '#default_value' => $settings['allow_clear'],
+      '#default_value' => $this->getSetting('allow_clear'),
       '#return_value' => 1,
     );
 
     $element['allow_revote'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Allow users to re-vote on already voted content.'),
-      '#default_value' => $settings['allow_revote'],
+      '#default_value' => $this->getSetting('allow_revote'),
       '#return_value' => 1,
     );
 
     $element['allow_ownvote'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Allow users to vote on their own content.'),
-      '#default_value' => $settings['allow_ownvote'],
+      '#default_value' => $this->getSetting('allow_ownvote'),
       '#return_value' => 1,
     );
+
+    
     // FIXME: Vijay
     // $options = $this->fivestar_get_targets($field, $instance);
     $options = array();
@@ -151,7 +153,9 @@ class FivestarItem extends FieldItemBase {
    */
   public function isEmpty() {
     return parent::isEmpty();
-    $item = $this->getFieldDefinition()->getItemDefinition()->getSetting('rating');
+    $item = $this->getFieldDefinition()
+      ->getItemDefinition()
+      ->getSetting('rating');
     return empty($item) || $item == '-';
   }
 
@@ -160,13 +164,6 @@ class FivestarItem extends FieldItemBase {
    */
   public function postSave($update) {
     $this->fieldOperations();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function delete() {
-    $this->fieldOperations('delete');
   }
 
   protected function fieldOperations($op = NULL) {
@@ -212,6 +209,13 @@ class FivestarItem extends FieldItemBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function delete() {
+    $this->fieldOperations('delete');
+  }
+
+  /**
    * Helper function to find the id that should be rated when a field is changed.
    */
   function _fivestar_field_target($entity, $field, $instance, $langcode) {
@@ -233,7 +237,8 @@ class FivestarItem extends FieldItemBase {
 
   function fivestar_get_targets($field, $instance, $key = FALSE, $entity = FALSE, $langcode = Language::LANGCODE_NOT_SPECIFIED) {
     $options = array();
-    $targets = \Drupal::moduleHandler()->invokeAll('fivestar_target_info', array($field, $instance));
+    $targets = \Drupal::moduleHandler()
+      ->invokeAll('fivestar_target_info', array($field, $instance));
     if ($key == FALSE) {
       foreach ($targets as $target => $info) {
         $options[$target] = $info['title'];
