@@ -82,6 +82,16 @@ class FivestarItem extends FieldItemBase {
     return $element;
   }
 
+  public static function defaultFieldSettings(){
+    return array(
+      'stars' => 5,
+      'allow_clear' => FALSE,
+      'allow_revote' => TRUE,
+      'allow_ownvote' => TRUE,
+      'target' => '',
+    ) + parent::defaultFieldSettings();
+  }
+
   /**
    * {@inheritdoc}
    */
@@ -96,27 +106,27 @@ class FivestarItem extends FieldItemBase {
       '#type' => 'select',
       '#title' => Html::escape($widget_title),
       '#options' =>  array_combine(range(1, 10), range(1, 10)),
-      '#default_value' => isset($settings['stars']) ? $settings['stars'] : 5,
+      '#default_value' => $settings['stars'],
     );
 
     $element['allow_clear'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Allow users to cancel their ratings.'),
-      '#default_value' => isset($settings['allow_clear']) ? $settings['allow_clear'] : FALSE,
+      '#default_value' => $settings['allow_clear'],
       '#return_value' => 1,
     );
 
     $element['allow_revote'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Allow users to re-vote on already voted content.'),
-      '#default_value' => isset($settings['allow_revote']) ? $settings['allow_revote'] : TRUE,
+      '#default_value' => $settings['allow_revote'],
       '#return_value' => 1,
     );
 
     $element['allow_ownvote'] = array(
       '#type' => 'checkbox',
       '#title' => $this->t('Allow users to vote on their own content.'),
-      '#default_value' => isset($settings['allow_ownvote']) ? $settings['allow_ownvote'] : TRUE,
+      '#default_value' => $settings['allow_ownvote'],
       '#return_value' => 1,
     );
     // FIXME: Vijay
