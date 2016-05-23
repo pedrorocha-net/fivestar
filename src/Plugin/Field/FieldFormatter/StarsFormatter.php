@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\fivestar\Plugin\Field\FieldFormatter\RatingFormatter.
+ * Contains \Drupal\fivestar\Plugin\Field\FieldFormatter\StarsFormatter.
  */
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
@@ -11,18 +11,18 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 
 /**
- * Plugin implementation of the 'fivestar_rating' formatter.
+ * Plugin implementation of the 'fivestar_stars' formatter.
  *
  * @FieldFormatter(
- *   id = "fivestar_rating",
- *   label = @Translation("Rating (i.e. 4.2/5)"),
+ *   id = "fivestar_stars",
+ *   label = @Translation("As stars"),
  *   field_types = {
  *     "fivestar"
  *   },
- *   weight = 3
+ *   weight = 1
  * )
  */
-class RatingFormatter extends FormatterBase {
+class StarsFormatter extends FormatterBase {
 
   public function viewElements(FieldItemListInterface $items, $langcode) {
     // TODO: Implement viewElements() method.

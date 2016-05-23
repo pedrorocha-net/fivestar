@@ -7,12 +7,11 @@
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FormatterBase;
+
 /**
- * Plugin implementation of the 'number_decimal' formatter.
- *
- * The 'Default' formatter is different for integer fields on the one hand, and
- * for decimal and float fields on the other hand, in order to be able to use
- * different settings.
+ * Plugin implementation of the 'fivestar_percentage' formatter.
  *
  * @FieldFormatter(
  *   id = "fivestar_percentage",
@@ -23,6 +22,10 @@ namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
  *   weight = 2
  * )
  */
-class PercentageFormatter extends FivestarFormatterBase {
+class PercentageFormatter extends FormatterBase {
+
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+    // TODO: Implement viewElements() method.
+  }
 
 }
