@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\DataDefinition;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Plugin implementation of the 'telephone' field type.
+ * Plugin implementation of the 'fivestart' field type.
  *
  * @FieldType(
  *   id = "fivestar",
