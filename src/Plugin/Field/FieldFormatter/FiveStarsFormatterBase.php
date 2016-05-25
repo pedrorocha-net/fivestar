@@ -14,6 +14,7 @@ class FiveStarsFormatterBase extends FormatterBase {
 
   public function viewElements(FieldItemListInterface $items, $langcode) {
     // TODO: Implement viewElements() method.
+    return [];
   }
 
 }
