@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\fivestar\Plugin\Field\FieldWidget\Exposed.
+ * Contains \Drupal\fivestar\Plugin\Field\FieldWidget\FiveStartWidgetBase
  */
 
 namespace Drupal\fivestar\Plugin\Field\FieldWidget;
