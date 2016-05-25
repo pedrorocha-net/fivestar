@@ -18,7 +18,7 @@ use Drupal\Component\Utility\Unicode;
  *
  * @FieldWidget(
  *   id = "fivestar_stars",
- *   label = @Translation("Stars (rated while editing)"),
+ *   label = @Translation("Stars"),
  *   field_types = {
  *     "fivestar"
  *   }
@@ -30,7 +30,8 @@ class Stars extends FiveStartWidgetBase {
    */
   public static function defaultSettings() {
     return [
-      'widget' => ['fivestar_widget' => 'default'],
+      'fivestar_widget' => 'default',
+      'fivestar_rated' => 'rated_while_viewing'
     ] + parent::defaultSettings();
   }
 
@@ -39,28 +40,33 @@ class Stars extends FiveStartWidgetBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
-    $elements['widget'] = array(
-      '#tree' => TRUE,
-      '#type' => 'fieldset',
-      '#title' => t('Star display options'),
-      '#description' => t('Choose a style for your widget.'),
-      '#weight' => -2,
-      '#collapsible' => TRUE,
-      '#collapsed' => TRUE,
-    );
 
-    $default = $this->getSetting('widget');
+    $elements['fivestar_rated'] = [
+      '#type' => 'radios',
+      '#default_value' => $this->getSetting('fivestar_rated'),
+      '#title' => $this->t('Select when user can rate the field'),
+      '#options' => [
+        'rated_while_viewing' => 'Rated while viewing',
+        'rated_while_editing' => 'Rated while editing',
+      ],
+    ];
 
-    $elements['widget']['fivestar_widget'] = [
+    $elements['fivestar_widget'] = [
       '#type' => 'radios',
       '#options' => ['default' => t('Default')] + $this->getAllWidget(),
-      '#default_value' => $default['fivestar_widget'],
+      '#default_value' => $this->getSetting('fivestar_widget'),
       '#attributes' => ['class' => ['fivestar-widgets', 'clearfix']],
       '#pre_render' => [[$this, 'previewsExpand']],
       '#attached' => ['library' => ['fivestar/fivestar.admin']],
     ];
-
     return $elements;
+  }
+
+  /**
+   * @return array
+   */
+  protected function getAllWidget() {
+    return \Drupal::moduleHandler()->invokeAll('fivestar_widgets');
   }
 
   public function previewsExpand(array $element) {
@@ -70,7 +76,8 @@ class Stars extends FiveStartWidgetBase {
         '#css' => $css,
         '#name' => strtolower($element[$css]['#title']),
       ];
-      $element[$css]['#description'] = \Drupal::service('renderer')->render($vars);
+      $element[$css]['#description'] = \Drupal::service('renderer')
+        ->render($vars);
     }
     return $element;
   }
@@ -87,7 +94,8 @@ class Stars extends FiveStartWidgetBase {
       }
       for ($i = 1; $i <= $star_settings; $i++) {
         $percentage = ceil($i * 100 / $star_settings);
-        $options[$percentage] = $this->getStringTranslation()->formatPlural($i, '1 star', '@count stars');
+        $options[$percentage] = $this->getStringTranslation()
+          ->formatPlural($i, '1 star', '@count stars');
       }
       $elements['rating'] = array(
         '#type' => 'select',
@@ -122,7 +130,6 @@ class Stars extends FiveStartWidgetBase {
         'text' => 'none',
         'widget' => $widget,
       );
-
       $element['rating'] = array(
         '#type' => 'fivestar',
         '#title' => isset($instance['label']) ? t($instance['label']) : FALSE,
@@ -139,13 +146,6 @@ class Stars extends FiveStartWidgetBase {
       );
     }
     return $element;
-  }
-
-  /**
-   * @return array
-   */
-  protected function getAllWidget() {
-    return \Drupal::moduleHandler()->invokeAll('fivestar_widgets');
   }
 
 }
