@@ -21,7 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "fivestar",
  *   label = @Translation("Fivestar Rating"),
  *   description = @Translation("Store a rating for this piece of content."),
- *   default_widget = "fivestar_exposed",
+ *   default_widget = "fivestar_stars",
  *   default_formatter = "fivestar_stars"
  * )
  */
