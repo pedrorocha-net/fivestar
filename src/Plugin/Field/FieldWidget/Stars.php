@@ -53,7 +53,7 @@ class Stars extends FiveStartWidgetBase {
 
     $elements['fivestar_widget'] = [
       '#type' => 'radios',
-      '#options' => ['default' => t('Default')] + $this->getAllWidget(),
+      '#options' => $this->getAllWidget(),
       '#default_value' => $this->getSetting('fivestar_widget'),
       '#attributes' => ['class' => ['fivestar-widgets', 'clearfix']],
       '#pre_render' => [[$this, 'previewsExpand']],
@@ -109,7 +109,7 @@ class Stars extends FiveStartWidgetBase {
     }
     else {
       $widgets = $this->getAllWidget();
-      $active = $this->getSetting('widget')['fivestar_widget'];
+      $active = $this->getSetting('fivestar_widget');
       $widget = array(
         'name' => isset($widgets[$active]) ? Unicode::strtolower($widgets[$active]) : 'default',
         'css' => $active,
