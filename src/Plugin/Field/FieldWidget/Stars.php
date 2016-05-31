@@ -30,7 +30,7 @@ class Stars extends FiveStartWidgetBase {
    */
   public static function defaultSettings() {
     return [
-      'fivestar_widget' => 'default',
+      'fivestar_widget' => 'modules/fivestar/widgets/basic/basic.css',
       'fivestar_rated' => 'rated_while_viewing'
     ] + parent::defaultSettings();
   }
