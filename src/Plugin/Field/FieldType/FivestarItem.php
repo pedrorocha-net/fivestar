@@ -77,19 +77,24 @@ class FivestarItem extends FieldItemBase {
     ) + parent::defaultFieldSettings();
   }
 
+  public static function defaultStorageSettings() {
+    return array(
+      'voting_tag' => 'vote',
+    ) + parent::defaultStorageSettings();
+  }
+
   /**
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    $element = array();
-
-    $element['axis'] = array(
+    $element = [];
+    $element['voting_tag'] = array(
       '#type' => 'select',
       '#required' => TRUE,
       '#title' => 'Voting Tag',
       '#options' => fivestar_get_tags(),
       '#description' => $this->t('The tag this rating will affect. Enter a property on which that this rating will affect, such as <em>quality</em>, <em>satisfaction</em>, <em>overall</em>, etc.'),
-      '#default_value' => $this->getSetting('axis'),
+      '#default_value' => $this->getSetting('voting_tag'),
       '#disabled' => $has_data,
     );
 
