@@ -7,6 +7,8 @@
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\FieldItemListInterface;
+
 /**
  * Plugin implementation of the 'fivestar_stars' formatter.
  *
@@ -20,5 +22,10 @@ namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
  * )
  */
 class StarsFormatter extends FiveStarsFormatterBase {
+
+  public function viewElements(FieldItemListInterface $items, $langcode) {
+    // TODO: Implement viewElements() method.
+    return [];
+  }
 
 }

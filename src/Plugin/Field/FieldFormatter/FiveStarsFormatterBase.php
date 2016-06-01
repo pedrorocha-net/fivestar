@@ -7,14 +7,34 @@
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Render\Element;
 
-class FiveStarsFormatterBase extends FormatterBase {
 
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    // TODO: Implement viewElements() method.
-    return [];
+abstract class FiveStarsFormatterBase extends FormatterBase {
+
+  /**
+   * @param array $element
+   * @return array
+   */
+  public function previewsExpand(array $element) {
+    foreach (Element::children($element) as $css) {
+      $vars = [
+        '#theme' => 'fivestar_preview_widget',
+        '#css' => $css,
+        '#name' => strtolower($element[$css]['#title']),
+      ];
+      $element[$css]['#description'] = \Drupal::service('renderer')
+        ->render($vars);
+    }
+    return $element;
+  }
+
+  /**
+   * @return array
+   */
+  protected function getAllWidget() {
+    return \Drupal::moduleHandler()->invokeAll('fivestar_widgets');
   }
 
 }
