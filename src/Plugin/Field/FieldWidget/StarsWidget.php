@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\fivestar\Plugin\Field\FieldWidget\Stars.
+ * Contains \Drupal\fivestar\Plugin\Field\FieldWidget\StarsWidget.
  */
 
 namespace Drupal\fivestar\Plugin\Field\FieldWidget;
@@ -24,7 +24,7 @@ use Drupal\Component\Utility\Unicode;
  *   }
  * )
  */
-class Stars extends FiveStartWidgetBase {
+class StarsWidget extends FiveStartWidgetBase {
   /**
    * {@inheritdoc}
    */

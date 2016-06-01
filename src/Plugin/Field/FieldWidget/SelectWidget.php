@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\fivestar\Plugin\Field\FieldWidget\Select.
+ * Contains \Drupal\fivestar\Plugin\Field\FieldWidget\SelectWidget.
  */
 
 namespace Drupal\fivestar\Plugin\Field\FieldWidget;
@@ -22,7 +22,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   }
  * )
  */
-class Select extends FiveStartWidgetBase {
+class SelectWidget extends FiveStartWidgetBase {
 
   /**
    * {@inheritdoc}
