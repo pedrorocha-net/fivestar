@@ -74,12 +74,12 @@ div.fivestar-widget .cancel, div.fivestar-widget .star {
   text-indent: -999em;
 }
 div.fivestar-widget .cancel, div.fivestar-widget .cancel a {
-  background: url(../widgets/default/delete.gif) no-repeat 0 -16px; /* RTL */
+  background: url(../../widgets/default/delete.gif) no-repeat 0 -16px; /* RTL */
   text-decoration: none;
 }
 
 div.fivestar-widget .star, div.fivestar-widget .star a {
-  background: url(../widgets/default/star.gif) no-repeat 0 0; /* RTL */
+  background: url(../../widgets/default/star.gif) no-repeat 0 0; /* RTL */
   text-decoration: none;
 }
 
