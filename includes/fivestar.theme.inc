@@ -337,3 +337,64 @@ function theme_fivestar_static_element($variables) {
   $output .= '</div>';
   return $output;
 }
+
+
+/**
+ * Show a preview of a widget using a custom CSS file.
+ */
+function theme_fivestar_output_widget($variables) {
+  $form = array(
+    '#post' => array(),
+    '#programmed' => FALSE,
+    '#tree' => FALSE,
+    '#parents' => array(),
+    '#array_parents' => array(),
+    '#required' => FALSE,
+    '#attributes' => array(),
+    '#title_display' => 'before',
+  );
+  $complete_form = [];
+  $form_state = new \Drupal\Core\Form\FormState();
+    $buidler = \Drupal::formBuilder();
+  $form_state->setValues([]);
+  $form_state->setProcessInput(FALSE);
+  $form_state->setCompleteForm($complete_form);
+
+  $form['vote'] = array(
+    '#type' => 'fivestar',
+    '#stars' => 5,
+    '#auto_submit' => FALSE,
+    '#allow_clear' => TRUE,
+    '#allow_revote' => TRUE,
+    '#allow_ownvote' => TRUE,
+    '#widget' => array(
+      'name' => isset($variables['name']) ? $variables['name'] : 'default',
+      'css' => isset($variables['css']) && $variables['css'] != 'default' ? $variables['css'] : FALSE,
+    ),
+  );
+
+  // Attach necessary JS settings
+  $settings = array(
+    'titleUser' => t('Your rating') . ': ',
+    'titleAverage' => t('Average') . ': ',
+    'feedbackSavingVote' => t('Saving your vote...'),
+    'feedbackVoteSaved' => t('Your vote has been saved.'),
+    'feedbackDeletingVote' => t('Deleting your vote...'),
+    'feedbackVoteDeleted' => t('Your vote has been deleted.'),
+  );
+//  $form['#attached'][] = array(
+//    'js' => array(
+//      array(
+//        'type' => 'setting',
+//        'data' => $settings
+//      )
+//    )
+//  );
+
+  $buidler->doBuildForm('fivestar_preview', $form, $form_state);
+  $output = $form;
+  $output['#prefix'] = '<div class="fivestar-star-preview fivestar-' . $form['vote']['#widget']['name'] . '">';
+  $output['#suffix'] = '</div>';
+
+  return \Drupal::service('renderer')->render($output);
+}

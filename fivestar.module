@@ -115,6 +115,11 @@ function fivestar_theme() {
       'render element' => 'element',
       'file' => 'includes/fivestar.theme.inc',
     ),
+    'fivestar_output_widget' => array(
+      'function' => 'theme_fivestar_output_widget',
+      'render element' => 'element',
+      'file' => 'includes/fivestar.theme.inc',
+    ),
   );
 }
 
