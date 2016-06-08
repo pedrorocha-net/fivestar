@@ -9,6 +9,7 @@ namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Component\Utility\Unicode;
 
 /**
  * Plugin implementation of the 'fivestar_stars' formatter.
@@ -35,15 +36,30 @@ class StarsFormatter extends FiveStarsFormatterBase {
 
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = [];
-    /**
-     * @var \Drupal\fivestar\Plugin\Field\FieldType\FivestarItem $item
-     */
+    $widgets = $this->getAllWidget();
+
+    /** @var \Drupal\fivestar\Plugin\Field\FieldType\FivestarItem $item */
     foreach ($items as $delta => $item) {
-      $widget = $this->getSetting('fivestar_widget');
+      $active = $this->getSetting('fivestar_widget');
+      $widget = [
+        'name' => Unicode::strtolower($widgets[$active]),
+        'css' => $active,
+      ];
+      $settings = $item->getFieldDefinition()->getSettings();
+      $values = array(
+        'user' => 0,
+        'average' => 0,
+        'count' => 0,
+      );
+
       $elements[$delta] = [
         '#theme' => 'fivestar_output_widget',
-        '#css' => $widget,
         '#name' => $item->getName(),
+        '#widget' => $widget,
+        '#default_value' => $item->rating,
+        '#settings' => $settings,
+        '#values' => $values,
+        '#description' => FALSE,
       ];
     }
     return $elements;
