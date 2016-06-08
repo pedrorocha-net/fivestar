@@ -88,7 +88,10 @@ function theme_fivestar_preview($variables) {
   // This regex is sadly necessary because having duplicate form_tokens or
   // form_id elements can cause the content type form to choke. Forms inside of
   // forms is also frowned upon, so this removes the wrapping form tag as well.
-  $form = str_replace(array('<form', '</form>'), array('<div', '</div>'), $form);
+  $form = str_replace(array('<form', '</form>'), array(
+    '<div',
+    '</div>'
+  ), $form);
   $form = preg_replace('/( method=".*?")|( action=".*?")|(<input.*?name="(form_token|form_id|destination|form_build_id)".*?\/>)/', '', $form);
   return $form;
 }
@@ -122,7 +125,11 @@ function theme_fivestar_formatter_default($variables) {
     'widget' => $element['#widget'],
   );
   $star_display = theme('fivestar_static', $variables);
-  return theme('fivestar_static_element', array('description' => $element['#description'], 'star_display' => $star_display, 'is_form' => FALSE));
+  return theme('fivestar_static_element', array(
+    'description' => $element['#description'],
+    'star_display' => $star_display,
+    'is_form' => FALSE
+  ));
 }
 
 /**
@@ -138,7 +145,7 @@ function theme_fivestar_formatter_rating($variables) {
   $stars = (empty($element['#instance_settings']['stars'])) ? 5 : $element['#instance_settings']['stars'];
   $average = $element['#item']['average'];
   // Rating is X out of Y stars.
-  $rating = round(($average/100) * $stars, 1);
+  $rating = round(($average / 100) * $stars, 1);
   $output = $rating . '/' . $stars;
 
   return $output;
@@ -194,7 +201,7 @@ function theme_fivestar_select($variables) {
  *   A themed HTML string representing the star widget.
  */
 function theme_fivestar_static($variables) {
-  $rating  = $variables['rating'];
+  $rating = $variables['rating'];
   $stars = $variables['stars'];
   $tag = $variables['tag'];
   $widget = $variables['widget'];
@@ -209,10 +216,10 @@ function theme_fivestar_static($variables) {
   if (empty($stars)) {
     $stars = 5;
   }
-  $numeric_rating = $rating/(100/$stars);
-  for ($n=1; $n <= $stars; $n++) {
-    $star_value = ceil((100/$stars) * $n);
-    $prev_star_value = ceil((100/$stars) * ($n-1));
+  $numeric_rating = $rating / (100 / $stars);
+  for ($n = 1; $n <= $stars; $n++) {
+    $star_value = ceil((100 / $stars) * $n);
+    $prev_star_value = ceil((100 / $stars) * ($n - 1));
     $zebra = ($n % 2 == 0) ? 'even' : 'odd';
     $first = $n == 1 ? ' star-first' : '';
     $last = $n == $stars ? ' star-last' : '';
@@ -227,7 +234,9 @@ function theme_fivestar_static($variables) {
     else {
       $output .= '<span class="off">';
     }
-    if ($n == 1)$output .= $numeric_rating;
+    if ($n == 1) {
+      $output .= $numeric_rating;
+    }
     $output .= '</span></div>';
   }
   $output .= '</div></div>';
@@ -283,7 +292,7 @@ function theme_fivestar_summary($variables) {
       $average_rating_microdata = drupal_attributes($microdata['average_rating']['#attributes']);
     }
     $output .= '<span class="average-rating">' . t('Average: !stars',
-      array('!stars' => "<span $average_rating_microdata>$average_stars</span>")) . '</span>';
+        array('!stars' => "<span $average_rating_microdata>$average_stars</span>")) . '</span>';
   }
 
   if (isset($votes)) {
@@ -291,7 +300,7 @@ function theme_fivestar_summary($variables) {
       $div_class = 'count';
     }
     if ($votes === 0) {
-      $output = '<span class="empty">'. t('No votes yet') .'</span>';
+      $output = '<span class="empty">' . t('No votes yet') . '</span>';
     }
     else {
       if (!empty($microdata['rating_count']['#attributes'])) {
@@ -300,7 +309,8 @@ function theme_fivestar_summary($variables) {
       // We don't directly substitute $votes (i.e. use '@count') in format_plural,
       // because it has a span around it which is not translatable.
       $votes_str = format_plural($votes, '!cnt vote', '!cnt votes', array(
-        '!cnt' => '<span ' . $rating_count_microdata . '>' . intval($votes) . '</span>'));
+        '!cnt' => '<span ' . $rating_count_microdata . '>' . intval($votes) . '</span>'
+      ));
       if (isset($user_rating) || isset($average_rating)) {
         $output .= ' <span class="total-votes">(' . $votes_str . ')</span>';
       }
@@ -355,41 +365,22 @@ function theme_fivestar_output_widget($variables) {
   );
   $complete_form = [];
   $form_state = new \Drupal\Core\Form\FormState();
-    $buidler = \Drupal::formBuilder();
+  $buidler = \Drupal::formBuilder();
   $form_state->setValues([]);
   $form_state->setProcessInput(FALSE);
   $form_state->setCompleteForm($complete_form);
+  $element = $variables['element'];
 
-  $form['vote'] = array(
+  $form['vote'] = [
     '#type' => 'fivestar',
-    '#stars' => 5,
     '#auto_submit' => FALSE,
-    '#allow_clear' => TRUE,
-    '#allow_revote' => TRUE,
-    '#allow_ownvote' => TRUE,
-    '#widget' => array(
-      'name' => isset($variables['name']) ? $variables['name'] : 'default',
-      'css' => isset($variables['css']) && $variables['css'] != 'default' ? $variables['css'] : FALSE,
-    ),
-  );
-
-  // Attach necessary JS settings
-  $settings = array(
-    'titleUser' => t('Your rating') . ': ',
-    'titleAverage' => t('Average') . ': ',
-    'feedbackSavingVote' => t('Saving your vote...'),
-    'feedbackVoteSaved' => t('Your vote has been saved.'),
-    'feedbackDeletingVote' => t('Deleting your vote...'),
-    'feedbackVoteDeleted' => t('Your vote has been deleted.'),
-  );
-//  $form['#attached'][] = array(
-//    'js' => array(
-//      array(
-//        'type' => 'setting',
-//        'data' => $settings
-//      )
-//    )
-//  );
+    '#stars' => $element['#settings']['stars'],
+    '#allow_clear' => $element['#settings']['allow_clear'],
+    '#allow_revote' => $element['#settings']['allow_revote'],
+    '#allow_ownvote' => $element['#settings']['allow_ownvote'],
+    '#widget' => $element['#widget'],
+    '#default_value' => $element['#default_value'],
+  ];
 
   $buidler->doBuildForm('fivestar_preview', $form, $form_state);
   $output = $form;
