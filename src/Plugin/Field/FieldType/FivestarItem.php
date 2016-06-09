@@ -73,6 +73,7 @@ class FivestarItem extends FieldItemBase {
       'allow_clear' => FALSE,
       'allow_revote' => TRUE,
       'allow_ownvote' => TRUE,
+      'rated_while' => 'viewing',
       'target' => '',
     ) + parent::defaultFieldSettings();
   }
@@ -134,6 +135,16 @@ class FivestarItem extends FieldItemBase {
       '#default_value' => $this->getSetting('allow_ownvote'),
       '#return_value' => 1,
     );
+
+    $element['rated_while'] = [
+      '#type' => 'radios',
+      '#default_value' => $this->getSetting('rated_while'),
+      '#title' => $this->t('Select when user can rate the field'),
+      '#options' => [
+        'viewing' => 'Rated while viewing',
+        'editing' => 'Rated while editing',
+      ],
+    ];
 
 
     // FIXME: Vijay
