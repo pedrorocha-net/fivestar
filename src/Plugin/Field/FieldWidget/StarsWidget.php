@@ -50,13 +50,6 @@ class StarsWidget extends FiveStartWidgetBase {
     return $elements;
   }
 
-  /**
-   * @return array
-   */
-  protected function getAllWidget() {
-    return \Drupal::moduleHandler()->invokeAll('fivestar_widgets');
-  }
-
   public function previewsExpand(array $element) {
     foreach (Element::children($element) as $css) {
       $vars = [

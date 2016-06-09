@@ -15,8 +15,10 @@ use Drupal\Core\Field\WidgetBase;
  */
 abstract class FiveStartWidgetBase extends WidgetBase {
 
-  protected function getAllFivestarWidgets() {
-    // FIXME: Vijay
+  /**
+   * @return array
+   */
+  protected function getAllWidget() {
     return \Drupal::moduleHandler()->invokeAll('fivestar_widgets');
   }
 
