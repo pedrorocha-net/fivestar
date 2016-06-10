@@ -67,65 +67,36 @@ class StarsWidget extends FiveStartWidgetBase {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-    if (isset($form['#title']) && $form['#title'] == 'Default value') {
-      $options = array(0 => t('No stars'));
-      $star_settings = $this->getSetting('stars');
-      if (empty($star_settings)) {
-        $instance['settings']['stars'] = 5;
-      }
-      for ($i = 1; $i <= $star_settings; $i++) {
-        $percentage = ceil($i * 100 / $star_settings);
-        $options[$percentage] = $this->getStringTranslation()
-          ->formatPlural($i, '1 star', '@count stars');
-      }
-      $elements['rating'] = array(
-        '#type' => 'select',
-        '#title' => $this->t(Html::escape($this->fieldDefinition->getLabel())),
-        '#options' => $options,
-        '#default_value' => isset($items[$delta]['rating']) ? $items[$delta]['rating'] : NULL,
-        '#description' => $this->t(Html::escape($this->fieldDefinition->getDescription())),
-        '#required' => isset($instance['required']) ? $instance['required'] : FALSE,
-      );
+    $widgets = $this->getAllWidget();
+    $active = $this->getSetting('fivestar_widget');
+    $widget = array(
+      'name' => isset($widgets[$active]) ? Unicode::strtolower($widgets[$active]) : 'default',
+      'css' => $active,
+    );
 
-    }
-    else {
-      $widgets = $this->getAllWidget();
-      $active = $this->getSetting('fivestar_widget');
-      $widget = array(
-        'name' => isset($widgets[$active]) ? Unicode::strtolower($widgets[$active]) : 'default',
-        'css' => $active,
-      );
+    $values = array(
+      'user' => 0,
+      'average' => 0,
+      'count' => 0,
+    );
 
-      $values = array(
-        'user' => 0,
-        'average' => 0,
-        'count' => 0,
-      );
-
-      $settings = array(
-        'stars' => $this->getSetting('stars'),
-        'allow_clear' => $this->getSetting('allow_clear') ?: FALSE,
-        'allow_revote' => $this->getSetting('allow_revote') ?: FALSE,
-        'allow_ownvote' => $this->getSetting('allow_ownvote') ?: FALSE,
-        'style' => 'user',
+    $settings = $items[$delta]->getFieldDefinition()
+        ->getSettings() + [
         'text' => 'none',
-        'widget' => $widget,
-      );
-      $element['rating'] = array(
-        '#type' => 'fivestar',
-        '#title' => isset($instance['label']) ? t($instance['label']) : FALSE,
-        '#stars' => $this->getSetting('stars') ?: 5,
-        '#allow_clear' => $this->getSetting('allow_clear') ?: FALSE,
-        '#allow_revote' => $this->getSetting('allow_revote') ?: FALSE,
-        '#allow_ownvote' => $this->getSetting('allow_ownvote') ?: FALSE,
-        '#default_value' => isset($items[$delta]->rating) ? $items[$delta]->rating : (isset($instance['default_value'][$delta]['rating']) ? $instance['default_value'][$delta]['rating'] : 0),
-        '#widget' => $widget,
-        '#settings' => $settings,
-        '#values' => $values,
-        '#description' => isset($instance['description']) ? t($instance['description']) : FALSE,
-        '#required' => isset($instance['required']) ? $instance['required'] : FALSE,
-      );
-    }
+        'style' => 'user',
+      ];
+
+    $element['rating'] = array(
+      '#type' => 'fivestar',
+      '#stars' => $settings['stars'],
+      '#allow_clear' => $settings['allow_clear'],
+      '#allow_revote' => $settings['allow_revote'],
+      '#allow_ownvote' => $settings['allow_ownvote'],
+      '#default_value' => isset($items[$delta]->rating) ? $items[$delta]->rating : 0,
+      '#widget' => $widget,
+      '#settings' => $settings,
+      '#values' => $values,
+    );
     return $element;
   }
 
