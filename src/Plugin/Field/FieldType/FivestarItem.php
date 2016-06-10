@@ -179,7 +179,7 @@ class FivestarItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function postSave($update) {
-    $this->fieldOperations();
+//    $this->fieldOperations();
   }
 
   protected function fieldOperations($op = NULL) {
@@ -228,7 +228,7 @@ class FivestarItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function delete() {
-    $this->fieldOperations('delete');
+//    $this->fieldOperations('delete');
   }
 
   /**
