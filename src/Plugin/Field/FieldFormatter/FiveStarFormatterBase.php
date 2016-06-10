@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\fivestar\Plugin\Field\FieldFormatter\FiveStarsFormatterBase.
+ * Contains \Drupal\fivestar\Plugin\Field\FieldFormatter\FiveStarFormatterBase.
  */
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
@@ -11,7 +11,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Render\Element;
 
 
-abstract class FiveStarsFormatterBase extends FormatterBase {
+abstract class FiveStarFormatterBase extends FormatterBase {
 
   /**
    * @param array $element

@@ -23,7 +23,7 @@ use Drupal\Component\Utility\Unicode;
  *   weight = 1
  * )
  */
-class StarsFormatter extends FiveStarsFormatterBase {
+class StarsFormatter extends FiveStarFormatterBase {
 
   /**
    * {@inheritdoc}

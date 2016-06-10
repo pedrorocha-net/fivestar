@@ -20,7 +20,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   weight = 2
  * )
  */
-class PercentageFormatter extends FiveStarsFormatterBase {
+class PercentageFormatter extends FiveStarFormatterBase {
   public function viewElements(FieldItemListInterface $items, $langcode) {
     // TODO: Implement viewElements() method.
     return [];

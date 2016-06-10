@@ -20,7 +20,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   weight = 3
  * )
  */
-class RatingFormatter extends FiveStarsFormatterBase {
+class RatingFormatter extends FiveStarFormatterBase {
 
   public function viewElements(FieldItemListInterface $items, $langcode) {
     // TODO: Implement viewElements() method.
