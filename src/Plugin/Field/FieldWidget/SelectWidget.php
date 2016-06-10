@@ -34,7 +34,7 @@ class SelectWidget extends FiveStartWidgetBase {
     $options = [];
     for ($i = 1; $i <= $settings['stars']; $i++) {
       $this_value = ceil($i * 100 / $settings['stars']);
-      $options[$this_value] = t('Give @star/@count', [
+      $options[$this_value] = $this->t('Give @star/@count', [
         '@star' => $i,
         '@count' => $settings['stars']
       ]);
@@ -42,7 +42,7 @@ class SelectWidget extends FiveStartWidgetBase {
 
     $element['rating'] = array(
       '#type' => 'select',
-      '#empty_option' => 'Select rating:',
+      '#empty_option' => $this->t('Select rating:'),
       '#empty_value' => '-',
       '#options' => $options,
       '#required' => $items[$delta]->getFieldDefinition()->isRequired(),
