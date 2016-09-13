@@ -1,9 +1,9 @@
 <?php
+
 /**
  * @file
  * Simpletests for the Fivestar module.
  */
-
 class FivestarTestCase extends FivestarBaseTestCase {
 
   public static function getInfo() {

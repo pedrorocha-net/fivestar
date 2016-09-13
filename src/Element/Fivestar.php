@@ -56,7 +56,7 @@ class Fivestar extends FormElement {
    *  Process callback for fivestar element
    */
   public static function process(&$element, FormStateInterface $form_state, &$complete_form) {
-    if (!self::isVoteAllowed($element)){
+    if (!self::isVoteAllowed($element)) {
       $element['#input'] = FALSE;
     }
 
@@ -72,13 +72,18 @@ class Fivestar extends FormElement {
       $entity = entity_load($element['#settings']['entity_type'], array($entity_id));
       $entity = $entity[$entity_id];
       $title = $entity->title;
-    } elseif (isset($complete_form['#node'])) {
+    }
+    elseif (isset($complete_form['#node'])) {
       $title = $complete_form['#node']->title;
     }
     $options = array('-' => t('Select rating'));
     for ($i = 1; $i <= $element['#stars']; $i++) {
-      $this_value = ceil($i * 100/$element['#stars']);
-      $options[$this_value] = t('Give @title @star/@count', array('@title' => $title, '@star' => $i, '@count' => $element['#stars']));
+      $this_value = ceil($i * 100 / $element['#stars']);
+      $options[$this_value] = t('Give @title @star/@count', array(
+        '@title' => $title,
+        '@star' => $i,
+        '@count' => $element['#stars']
+      ));
     }
     // Display clear button only if enabled.
     if ($element['#allow_clear'] == TRUE) {
@@ -314,8 +319,8 @@ class Fivestar extends FormElement {
     }
 
     for ($i = 0; $i <= $element['#stars']; $i++) {
-      $this_value = ceil($i * 100/$element['#stars']);
-      $next_value = ceil(($i+1) * 100/$element['#stars']);
+      $this_value = ceil($i * 100 / $element['#stars']);
+      $next_value = ceil(($i + 1) * 100 / $element['#stars']);
 
       // Round up the default value to the next exact star value if needed.
       if ($this_value < $default_value && $next_value > $default_value) {

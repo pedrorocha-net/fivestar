@@ -2,9 +2,9 @@
   "name": "fivestar",
   "version": "1.0.0",
   "author": "Pedro Rocha <pedro.rocha@toptal.com>",
-  "contributors":{
-    "name" : "Victor Pereira",
-    "email" : "victorcpereira@gmail.com"
+  "contributors": {
+    "name": "Victor Pereira",
+    "email": "victorcpereira@gmail.com"
   },
   "devDependencies": {
     "coffee-script": "^1.8.0",

@@ -168,7 +168,8 @@ function fivestar_previews_expand($element) {
       '#css' => $css,
       '#name' => strtolower($element[$css]['#title']),
     );
-    $element[$css]['#description'] = \Drupal::service('renderer')->render($vars);
+    $element[$css]['#description'] = \Drupal::service('renderer')
+      ->render($vars);
   }
   return $element;
 }
@@ -223,7 +224,7 @@ function fivestar_field_widget_form(&$form, &$form_state, $field, $instance, $la
     );
 
     $element['rating'] = array(
-      '#type'=> 'fivestar',
+      '#type' => 'fivestar',
       '#title' => isset($instance['label']) ? (($i18n) ? i18n_field_translate_property($instance, 'label') : t($instance['label'])) : FALSE,
       '#stars' => isset($instance['settings']['stars']) ? $instance['settings']['stars'] : 5,
       '#allow_clear' => isset($instance['settings']['allow_clear']) ? $instance['settings']['allow_clear'] : FALSE,
@@ -249,7 +250,7 @@ function fivestar_field_formatter_info() {
     'fivestar_formatter_default' => array(
       'label' => t('As Stars'),
       'field types' => array('fivestar'),
-      'settings' =>  array(
+      'settings' => array(
         // Note: Do not set to widget to 'default' by
         // default. "Stars (rated while editing)" should
         // default to whatever was selected as a widget
@@ -319,9 +320,9 @@ function fivestar_field_formatter_settings_form($field, $instance, $view_mode, $
     '#default_value' => $settings['style'],
     '#options' => array(
       'average' => t('Average vote'),
-      'user'    => t("User's vote"),
-      'smart'   => t("User's vote if available, average otherwise"),
-      'dual'    => t("Both user's and average vote"),
+      'user' => t("User's vote"),
+      'smart' => t("User's vote if available, average otherwise"),
+      'dual' => t("Both user's and average vote"),
     ),
   );
   $element['text'] = array(
@@ -329,11 +330,11 @@ function fivestar_field_formatter_settings_form($field, $instance, $view_mode, $
     '#title' => t('Text to display under the stars'),
     '#default_value' => $settings['text'],
     '#options' => array(
-      'none'    => t('No text'),
+      'none' => t('No text'),
       'average' => t('Average vote'),
-      'user'    => t("User's vote"),
-      'smart'   => t("User's vote if available, average otherwise"),
-      'dual'    => t("Both user's and average vote"),
+      'user' => t("User's vote"),
+      'smart' => t("User's vote if available, average otherwise"),
+      'dual' => t("Both user's and average vote"),
     ),
   );
 
@@ -358,14 +359,16 @@ function fivestar_field_formatter_settings_summary($field, $instance, $view_mode
       '@widget' => isset($widgets[$settings['widget']['fivestar_widget']]) ? strtolower($widgets[$settings['widget']['fivestar_widget']]) : t('default'),
       '@expose' => ($settings['expose']) ? 'yes' : 'no',
       '@style' => strtolower($settings['style']),
-      '@text' => strtolower($settings['text'])));
+      '@text' => strtolower($settings['text'])
+    ));
     return $summary;
   }
 
   $summary = t("Style: @widget, Stars display: @style, Text display: @text", array(
     '@widget' => isset($widgets[$settings['widget']['fivestar_widget']]) ? $widgets[$settings['widget']['fivestar_widget']] : t('default'),
     '@style' => strtolower($settings['style']),
-    '@text' => strtolower($settings['text'])));
+    '@text' => strtolower($settings['text'])
+  ));
 
   return $summary;
 }
@@ -402,9 +405,9 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
   // - Fivestar widget selected is "Stars (rated while viewing)"
   // - Fivestar display setting = "exposed"
   $is_form = ($instance['widget']['type'] == 'exposed'
-              && user_access('rate content')
-              && $display['type'] == 'fivestar_formatter_default'
-              && $display['settings']['expose']) ? TRUE : FALSE;
+    && user_access('rate content')
+    && $display['type'] == 'fivestar_formatter_default'
+    && $display['settings']['expose']) ? TRUE : FALSE;
   if ($is_form) {
     // TODO. Get rid of voting categories setting, then change this so
     // axis = field name.
@@ -419,7 +422,8 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
       'langcode' => $langcode,
     );
     // If microdata module is enabled, attach the microdata attributes.
-    $settings['microdata'] = \Drupal::moduleHandler()->moduleExists('microdata') ? $entity->microdata[$field['field_name']] : array();
+    $settings['microdata'] = \Drupal::moduleHandler()
+      ->moduleExists('microdata') ? $entity->microdata[$field['field_name']] : array();
 
     $element[0] = drupal_get_form('fivestar_custom_widget', $values, $settings);
     // Our work here is done.
@@ -488,18 +492,18 @@ function fivestar_field_formatter_view($entity_type, $entity, $field, $instance,
     'votes' => NULL,
   );
 
- $summary_options['microdata'] = _fivestar_get_microdata_property_info($entity_type, $entity, $field, $instance);
+  $summary_options['microdata'] = _fivestar_get_microdata_property_info($entity_type, $entity, $field, $instance);
 
   // If we're displaying both user and average ratings, add a description to
   // both the 'user' and 'average' elements.
   if ($style === 'dual') {
     $element[0]['user']['#description'] = theme('fivestar_summary', array(
-      'user_rating' => $values['user'],
-    ) + $summary_options);
+        'user_rating' => $values['user'],
+      ) + $summary_options);
     $element[0]['average']['#description'] = theme('fivestar_summary', array(
-      'average_rating' => $values['average'],
-      'votes' => $values['count'],
-    ) + $summary_options);
+        'average_rating' => $values['average'],
+        'votes' => $values['count'],
+      ) + $summary_options);
   }
   // If we're only creating one element (either 'user' or 'average'), prepare
   // the correct description, and place it on that element.
@@ -580,7 +584,10 @@ function _fivestar_custom_widget_settings($entity_type, $instance, $display, $id
 function _fivestar_get_widget($widgets, $display, $instance) {
   // If the type doesn't required widgets lets get out of here.
   // TODO: Implement this WAY better.
-  if (in_array($display['type'], array('fivestar_formatter_rating', 'fivestar_formatter_percentage'))) {
+  if (in_array($display['type'], array(
+    'fivestar_formatter_rating',
+    'fivestar_formatter_percentage'
+  ))) {
     return FALSE;
   }
 
@@ -639,9 +646,9 @@ function fivestar_field_prepare_view($entity_type, $entities, $field, $instances
         $items[$id] = array($values);
       }
     }
-    if(!empty($exposed_widgets)) {
+    if (!empty($exposed_widgets)) {
       $votes = fivestar_get_votes_multiple($entity_type, $exposed_widgets, $field['settings']['axis']);
-      foreach($votes[$entity_type] as $id => $vote) {
+      foreach ($votes[$entity_type] as $id => $vote) {
         // Populating the $items[$id] array even for items with no value forces
         // the render system to output a widget.
         $values['user'] = isset($vote['user']['value']) ? $vote['user']['value'] : 0;
