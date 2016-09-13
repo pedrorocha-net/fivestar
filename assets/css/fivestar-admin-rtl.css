@@ -1,29 +1,33 @@
 div.fivestar-widgets div.form-item {
-  float: right;
+    float: right;
 }
 
 #placeholder {
-  left: 0;
-  right: auto;
+    left: 0;
+    right: auto;
 }
 
 .color-form label {
-  float: right;
+    float: right;
 }
+
 .color-form .form-select {
-  float: right;
+    float: right;
 }
+
 .color-form #edit-fivestar-colors-matte {
-  float: right;
+    float: right;
 }
+
 .color-form .form-text {
-  margin-left: 5px;
+    margin-left: 5px;
 }
 
 #fivestar-palette .lock {
-  float: right;
-  right: -3px;
+    float: right;
+    right: -3px;
 }
+
 #fivestar-palette .form-item .form-item {
-  float: right;
+    float: right;
 }

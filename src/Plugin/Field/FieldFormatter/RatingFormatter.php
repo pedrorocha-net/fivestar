@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\fivestar\Plugin\Field\FieldFormatter;
+
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**

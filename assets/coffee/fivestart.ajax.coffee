@@ -10,11 +10,9 @@
 
 (($) ->
 # Create local scope.
-
   Drupal.ajax::commands.fivestarUpdate = (ajax, response, status) ->
     response.selector = $('.fivestar-form-item', ajax.element.form)
     ajax.commands.insert ajax, response, status
     return
 
-  return
-) jQuery
+  return) jQuery

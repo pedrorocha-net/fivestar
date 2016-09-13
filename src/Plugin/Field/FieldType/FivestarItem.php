@@ -148,8 +148,7 @@ class FivestarItem extends FieldItemBase {
 
 
     // FIXME: Vijay
-    // $options = $this->fivestar_get_targets($field, $instance);
-    $options = array();
+    $options = $this->fivestar_get_targets($field, $instance);
     $element['target'] = array(
       '#title' => $this->t('Voting target'),
       '#type' => 'select',
@@ -267,5 +266,4 @@ class FivestarItem extends FieldItemBase {
       }
     }
   }
-
 }

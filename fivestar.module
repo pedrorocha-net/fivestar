@@ -8,6 +8,7 @@
 include_once dirname(__FILE__) . '/includes/fivestar.field.inc';
 
 use Drupal\Component\Utility\Unicode;
+
 /**
  * Implementation of hook_help().
  */
@@ -16,7 +17,7 @@ function fivestar_help($path, $arg) {
   switch ($path) {
     case 'admin/config/content/fivestar':
       $output = t('This page is used to configure site-wide features of the Fivestar module.');
-    break;
+      break;
   }
   return $output;
 }
@@ -61,23 +62,44 @@ function fivestar_theme() {
     ),
     'fivestar_static' => array(
       'function' => 'theme_fivestar_static',
-      'variables' => array('rating' => NULL, 'stars' => 5, 'tag' => 'vote', 'widget' => array('name' => 'default', 'css' => '')),
+      'variables' => array(
+        'rating' => NULL,
+        'stars' => 5,
+        'tag' => 'vote',
+        'widget' => array('name' => 'default', 'css' => '')
+      ),
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_static_element' => array(
       'function' => 'theme_fivestar_static_element',
-      'variables' => array('star_display' => NULL, 'title' => NULL, 'description' => NULL),
+      'variables' => array(
+        'star_display' => NULL,
+        'title' => NULL,
+        'description' => NULL
+      ),
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_summary' => array(
       'function' => 'theme_fivestar_summary',
-      'variables' => array('user_rating' => NULL, 'average_rating' => NULL, 'votes' => 0, 'stars' => 5, 'microdata' => array()),
+      'variables' => array(
+        'user_rating' => NULL,
+        'average_rating' => NULL,
+        'votes' => 0,
+        'stars' => 5,
+        'microdata' => array()
+      ),
       'file' => 'includes/fivestar.theme.inc',
     ),
     // fivestar.admin.inc.
     'fivestar_preview' => array(
       'function' => 'theme_fivestar_preview',
-      'variables' => array('style' => NULL, 'text' => NULL, 'stars' => NULL, 'unvote' => NULL, 'title' => NULL),
+      'variables' => array(
+        'style' => NULL,
+        'text' => NULL,
+        'stars' => NULL,
+        'unvote' => NULL,
+        'title' => NULL
+      ),
       'file' => 'includes/fivestar.theme.inc',
     ),
     'fivestar_preview_widget' => array(
@@ -124,7 +146,20 @@ function fivestar_theme() {
 }
 
 function _fivestar_variables() {
-  return array('fivestar', 'fivestar_unvote', 'fivestar_style', 'fivestar_stars', 'fivestar_comment', 'fivestar_position', 'fivestar_position_teaser', 'fivestar_labels_enable', 'fivestar_labels', 'fivestar_text', 'fivestar_title', 'fivestar_feedback');
+  return array(
+    'fivestar',
+    'fivestar_unvote',
+    'fivestar_style',
+    'fivestar_stars',
+    'fivestar_comment',
+    'fivestar_position',
+    'fivestar_position_teaser',
+    'fivestar_labels_enable',
+    'fivestar_labels',
+    'fivestar_text',
+    'fivestar_title',
+    'fivestar_feedback'
+  );
 }
 
 /**
@@ -146,7 +181,12 @@ function _fivestar_cast_vote($entity_type, $id, $value, $tag = NULL, $uid = NULL
     }
 
     // Get the user's current vote.
-    $criteria = array('entity_type' => $entity_type, 'entity_id' => $id, 'tag' => $tag, 'uid' => $uid);
+    $criteria = array(
+      'entity_type' => $entity_type,
+      'entity_id' => $id,
+      'tag' => $tag,
+      'uid' => $uid
+    );
     // Get the unique identifier for the user (IP Address if anonymous).
 
     if ($vote_source != NULL) {
@@ -211,7 +251,7 @@ function fivestar_get_votes_multiple($entity_type, $ids, $tag = 'vote', $uid = N
   $votes = array();
 
   // Initialize defaults.
-  foreach($ids as $id) {
+  foreach ($ids as $id) {
     $votes[$entity_type][$id] = array(
       'average' => array(),
       'count' => array(),
@@ -221,8 +261,8 @@ function fivestar_get_votes_multiple($entity_type, $ids, $tag = 'vote', $uid = N
 
   $results = votingapi_select_results($criteria);
   $user_votes = array();
-  if(!empty($results)) {
-    foreach(votingapi_select_votes($criteria += array('uid' => $uid)) as $uv) {
+  if (!empty($results)) {
+    foreach (votingapi_select_votes($criteria += array('uid' => $uid)) as $uv) {
       $user_votes[$uv['entity_type']][$uv['entity_id']] = $uv;
     }
   }
@@ -234,18 +274,18 @@ function fivestar_get_votes_multiple($entity_type, $ids, $tag = 'vote', $uid = N
     if ($result['function'] == 'count') {
       $votes[$result['entity_type']][$result['entity_id']]['count'] = $result;
     }
-	  if ($uid) {
-	    if (!empty($user_votes[$result['entity_type']][$result['entity_id']])) {
+    if ($uid) {
+      if (!empty($user_votes[$result['entity_type']][$result['entity_id']])) {
         $votes[$result['entity_type']][$result['entity_id']]['user'] = $user_votes[$result['entity_type']][$result['entity_id']];
         $votes[$result['entity_type']][$result['entity_id']]['user']['function'] = 'user';
-	    }
-	  }
-	  else {
-	    // If the user is anonymous, we never bother loading their existing votes.
-	    // Not only would it be hit-or-miss, it would break page caching. Safer to always
-	    // show the 'fresh' version to anon users.
+      }
+    }
+    else {
+      // If the user is anonymous, we never bother loading their existing votes.
+      // Not only would it be hit-or-miss, it would break page caching. Safer to always
+      // show the 'fresh' version to anon users.
       $votes[$result['entity_type']][$result['entity_id']]['user'] = array('value' => 0);
-	  }
+    }
   }
 
   return $votes;
@@ -338,7 +378,7 @@ function fivestar_fivestar_access($entity_type, $id, $tag, $uid) {
 function fivestar_form_comment_form_alter(&$form, &$form_state, $form_id) {
   $fivestar_field_keys = array();
   if (isset($form['comment_output_below'])) {
-    foreach($form['comment_output_below'] as $key => $value) {
+    foreach ($form['comment_output_below'] as $key => $value) {
       if (is_array($value) && !empty($value['#field_type']) && $value['#field_type'] == 'fivestar') {
         $fivestar_field_keys[] = $key;
       }
@@ -450,7 +490,10 @@ function fivestar_custom_widget($form, &$form_state, $values, $settings) {
     '#allow_revote' => $settings['allow_revote'],
     '#allow_ownvote' => $settings['allow_ownvote'],
     '#required' => isset($settings['required']) ? $settings['required'] : FALSE,
-    '#widget' => isset($settings['widget']) ? $settings['widget'] : array('name' => 'default', 'css' => 'default'),
+    '#widget' => isset($settings['widget']) ? $settings['widget'] : array(
+      'name' => 'default',
+      'css' => 'default'
+    ),
     '#values' => $values,
     '#settings' => $settings,
     '#description' => $settings['description'],
@@ -576,11 +619,15 @@ function fivestar_fivestar_target_info($field, $instance) {
     ),
   );
   $module_handler = \Drupal::moduleHandler();
-  // Add node_referrence support.
+  // Add node_reference support.
   if ($module_handler->moduleExists('node_reference')) {
     $field_names = array_keys(field_read_fields(array('module' => 'node_reference')));
     if (!empty($field_names)) {
-      $field_instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle, 'field_name' => $field_names));
+      $field_instances = field_read_instances(array(
+        'entity_type' => $entity_type,
+        'bundle' => $bundle,
+        'field_name' => $field_names
+      ));
       if (!empty($field_instances)) {
         foreach ($field_instances as $field_instance) {
           $options[$field_instance['field_name']] = array(
@@ -596,7 +643,11 @@ function fivestar_fivestar_target_info($field, $instance) {
   if ($module_handler->moduleExists('entityreference')) {
     $field_names = array_keys(field_read_fields(array('module' => 'entityreference')));
     if (!empty($field_names)) {
-      $field_instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle, 'field_name' => $field_names));
+      $field_instances = field_read_instances(array(
+        'entity_type' => $entity_type,
+        'bundle' => $bundle,
+        'field_name' => $field_names
+      ));
       if (!empty($field_instances)) {
         foreach ($field_instances as $field_instance) {
           $options[$field_instance['field_name']] = array(
@@ -612,7 +663,11 @@ function fivestar_fivestar_target_info($field, $instance) {
   if ($module_handler->moduleExists('user_reference')) {
     $field_names = array_keys(field_read_fields(array('module' => 'user_reference')));
     if (!empty($field_names)) {
-      $field_instances = field_read_instances(array('entity_type' => $entity_type, 'bundle' => $bundle, 'field_name' => $field_names));
+      $field_instances = field_read_instances(array(
+        'entity_type' => $entity_type,
+        'bundle' => $bundle,
+        'field_name' => $field_names
+      ));
       if (!empty($field_instances)) {
         foreach ($field_instances as $field_instance) {
           $options[$field_instance['field_name']] = array(
@@ -701,7 +756,8 @@ function _fivestar_target_comment_parent_node($entity, $field, $instance, $langc
 function fivestar_library_info_build() {
   $libraries = [];
   $module_path = drupal_get_path('module', 'fivestar');
-  foreach (\Drupal::moduleHandler()->invokeAll('fivestar_widgets') as $path => $widget) {
+  foreach (\Drupal::moduleHandler()
+             ->invokeAll('fivestar_widgets') as $path => $widget) {
     // @todo ok, that's wierd.
     $path = str_replace($module_path . '/', '', $path);
     $name = Unicode::strtolower($widget);
